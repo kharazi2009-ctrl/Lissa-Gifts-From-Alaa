@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Lisa | Happy Girlfriend Day ❤️</title>
+    <!-- Google Fonts for Apple-like refined typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           1. CSS VARIABLES & SYSTEM SETUP
+           ========================================================================== */
+        :root {
+            --bg-dark: #07050d;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --border-glass: rgba(255, 255, 255, 0.12);
+            --border-glow: rgba(255, 117, 143, 0.4);
+            
+            --primary: #ff4d6d;
+            --primary-glow: rgba(255, 77, 109, 0.5);
+            --secondary: #c77dff;
+            --secondary-glow: rgba(199, 125, 255, 0.5);
+            --accent: #ffb703;
+            
+            --text-main: #f8f9fa;
+            --text-muted: rgba(248, 249, 250, 0.7);
+            --text-accent: #ff85a1;
+            
+            --font-display: 'Cinzel', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-script: 'Sacramento', cursive;
+            
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        /* Reset & Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+        }
+
+        body {
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 77, 109, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 77, 109, 0.6);
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--primary-glow);
+            color: #fff;
+        }
+
+        /* ==========================================================================
+           2. CANVAS & OVERLAYS (Night Sky, Cursor, Particles)
+           ========================================================================== */
+        #sky-canvas, #burst-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #burst-canvas {
+            z-index: 999;
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 77, 109, 0.15) 0%, rgba(199, 125, 255, 0.05) 50%, transparent 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            transition: width 0.3s, height 0.3s;
+            will-change: transform;
+        }
+
+        /* Floating Ambient Particles Layer */
+        .ambient-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0;
+            font-size: 1.2rem;
+            animation: floatUp 12s infinite linear;
+            filter: drop-shadow(0 0 6px var(--primary-glow));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ==========================================================================
+           3. UI COMPONENTS & UTILITIES
+           ========================================================================== */
+        /* Glassmorphic Container */
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: 0.8s;
+        }
+
+        .glass-panel:hover::before {
+            left: 100%;
+        }
+
+        /* Buttons */
+        .btn-glow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 42px;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary) 0%, #d62828 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 10px 25px -5px var(--primary-glow),
+                        0 0 15px 0 var(--primary-glow);
+            transition: all 0.4s var(--ease-out-expo);
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 15px 35px -5px var(--primary-glow),
+                        0 0 25px 5px var(--primary-glow);
+        }
+
+        .btn-glow:active {
+            transform: translateY(-1px) scale(0.99);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, #7209b7 100%);
+            box-shadow: 0 10px 25px -5px var(--secondary-glow);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 15px 35px -5px var(--secondary-glow),
+                        0 0 25px 5px var(--secondary-glow);
+        }
+
+        /* Audio Control Toggle */
+        .audio-toggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 1000;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .audio-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .audio-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Section Layouts */
+        section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px;
+            z-index: 5;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 30%, var(--text-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 3.5rem;
+            max-width: 600px;
+            font-weight: 300;
+        }
+
+        /* Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.2s var(--ease-out-expo), transform 1.2s var(--ease-out-expo);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==========================================================================
+           4. PRELOADER
+           ========================================================================== */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loader-heart {
+            font-size: 3.5rem;
+            color: var(--primary);
+            animation: pulseHeart 1.2s infinite ease-in-out;
+            filter: drop-shadow(0 0 20px var(--primary-glow));
+        }
+
+        .loader-text {
+            margin-top: 20px;
+            font-family: var(--font-display);
+            letter-spacing: 3px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* ==========================================================================
+           5. SECTION 1: HERO
+           ========================================================================== */
+        #hero {
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #ff85a1 50%, #c77dff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(255, 77, 109, 0.3));
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-script);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--text-accent);
+            margin-bottom: 40px;
+            text-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        /* ==========================================================================
+           6. SECTION 2: LOVE LETTER
+           ========================================================================== */
+        .letter-container {
+            max-width: 800px;
+            width: 100%;
+            padding: 50px 40px;
+            background: rgba(15, 10, 25, 0.5);
+            border: 1px solid rgba(255, 117, 143, 0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255, 77, 109, 0.05);
+        }
+
+        .letter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .letter-header span {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .letter-content {
+            font-size: 1.25rem;
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.9);
+            min-height: 250px;
+            white-space: pre-wrap;
+            font-weight: 300;
+        }
+
+        .cursor-line {
+            display: inline-block;
+            width: 3px;
+            height: 1.2rem;
+            background-color: var(--primary);
+            margin-left: 5px;
+            vertical-align: middle;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ==========================================================================
+           7. SECTION 3: RELATIONSHIP TIMER
+           ========================================================================== */
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 850px;
+            width: 100%;
+        }
+
+        .timer-card {
+            padding: 30px 10px;
+            text-align: center;
+            border: 1px solid var(--border-glass);
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+        }
+
+        .timer-val {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 20px var(--primary-glow);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .timer-unit {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-accent);
+            font-weight: 600;
+        }
+
+        /* ==========================================================================
+           8. SECTION 4: WHY I LOVE YOU (Glass Cards Grid)
+           ========================================================================== */
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .reason-card {
+            padding: 35px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            transition: transform 0.4s var(--ease-out-expo), border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .reason-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-glow);
+            box-shadow: 0 15px 30px rgba(255, 77, 109, 0.15);
+        }
+
+        .reason-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(255, 77, 109, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            border: 1px solid rgba(255, 77, 109, 0.2);
+        }
+
+        .reason-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .reason-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* ==========================================================================
+           9. SECTION 5: SECRET SURPRISE
+           ========================================================================== */
+        #surprise-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 3, 10, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        #surprise-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .surprise-content {
+            text-align: center;
+            padding: 40px;
+            max-width: 650px;
+            transform: scale(0.8);
+            transition: transform 0.8s var(--ease-out-expo);
+        }
+
+        #surprise-modal.active .surprise-content {
+            transform: scale(1);
+        }
+
+        .surprise-text {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            color: #fff;
+            line-height: 1.3;
+            text-shadow: 0 0 30px var(--primary-glow);
+            margin-bottom: 30px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        /* ==========================================================================
+           10. SECTION 6: FINAL SCENE & FOOTER
+           ========================================================================== */
+        #final-scene {
+            background: radial-gradient(circle at bottom, rgba(255, 77, 109, 0.25) 0%, rgba(199, 125, 255, 0.1) 40%, transparent 70%);
+            text-align: center;
+            padding-bottom: 150px;
+        }
+
+        .big-heart-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .beating-heart {
+            font-size: 6rem;
+            color: var(--primary);
+            display: inline-block;
+            animation: pulseBigHeart 1.5s infinite var(--ease-in-out-smooth);
+            filter: drop-shadow(0 0 40px var(--primary-glow));
+        }
+
+        @keyframes pulseBigHeart {
+            0% { transform: scale(1); filter: drop-shadow(0 0 20px var(--primary-glow)); }
+            50% { transform: scale(1.25); filter: drop-shadow(0 0 50px var(--primary-glow)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 20px var(--primary-glow)); }
+        }
+
+        .final-quote {
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 800px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .final-names {
+            font-family: var(--font-script);
+            font-size: clamp(3rem, 7vw, 5rem);
+            color: var(--text-accent);
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .final-sub {
+            font-family: var(--font-display);
+            letter-spacing: 4px;
+            font-size: 1rem;
+            color: var(--text-muted);
+              text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 1px;
+        }
+
+        /* ==========================================================================
+           11. RESPONSIVE DESIGN (MOBILE-FIRST BREAKPOINTS)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            section {
+                padding: 70px 15px;
+            }
+
+            .timer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .letter-container {
+                padding: 30px 20px;
+            }
+
+            .letter-content {
+                font-size: 1.1rem;
+            }
+
+            .reasons-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-glow {
+                padding: 15px 32px;
+                font-size: 1rem;
+            }
+
+            .cursor-glow {
+                display: none; /* Mobile performance optimization */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================================================
+         PRELOADER
+         ========================================================================== -->
+    <div id="loader">
+        <div class="loader-heart">❤️</div>
+        <div class="loader-text">Loading Love...</div>
+    </div>
+
+    <!-- ==========================================================================
+         AUDIO CONTROL & AMBIENT CANVAS LAYERS
+         ========================================================================== -->
+    <button class="audio-toggle" id="audioToggle" title="Toggle Ambient Sound">
+        <!-- Muted Icon Default -->
+        <svg id="audioIconOff" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+        <svg id="audioIconOn" viewBox="0 0 24 24" style="display:none;"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    </button>
+
+    <canvas id="sky-canvas"></canvas>
+    <canvas id="burst-canvas"></canvas>
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="ambient-hearts" id="ambientHearts"></div>
+
+    <!-- ==========================================================================
+         SECTION 1: HERO
+         ========================================================================== -->
+    <section id="hero">
+        <h1 class="hero-title reveal">Happy Girlfriend Day ❤️</h1>
+        <h2 class="hero-subtitle reveal">For Lisa</h2>
+        <a href="#letter" class="btn-glow reveal" id="openHeartBtn">Open My Heart</a>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 2: LOVE LETTER
+         ========================================================================== -->
+    <section id="letter">
+        <h2 class="section-title reveal">My Heart To Yours</h2>
+        <p class="section-subtitle reveal">A few words to express what is infinite</p>
+        
+        <div class="glass-panel letter-container reveal">
+            <div class="letter-header">
+                <span>To: Lisa</span>
+                <span>From: Alaa</span>
+            </div>
+            <div class="letter-content" id="typewriter"></div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 3: RELATIONSHIP TIMER
+         ========================================================================== -->
+    <section id="timer">
+        <h2 class="section-title reveal">Every Moment With You</h2>
+        <p class="section-subtitle reveal">Counting every precious second since our journey began</p>
+        
+        <div class="timer-grid reveal">
+            <div class="glass-panel timer-card">
+                <div class="timer-val" id="days">00</div>
+                <div class="timer-unit">Days</div>
+            </div>
+            <div class="glass-panel timer-card">
+                <div class="timer-val" id="hours">00</div>
+                <div class="timer-unit">Hours</div>
+            </div>
+            <div class="glass-panel timer-card">
+                <div class="timer-val" id="minutes">00</div>
+                <div class="timer-unit">Minutes</div>
+            </div>
+            <div class="glass-panel timer-card">
+                <div class="timer-val" id="seconds">00</div>
+                <div class="timer-unit">Seconds</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 4: WHY I LOVE YOU
+         ========================================================================== -->
+    <section id="reasons">
+        <h2 class="section-title reveal">Why I Love You</h2>
+        <p class="section-subtitle reveal">A million reasons, but here are just a few</p>
+        
+        <div class="reasons-grid">
+            <div class="glass-panel reason-card reveal">
+                <div class="reason-icon">✨</div>
+                <h3 class="reason-title">Your Smile</h3>
+                <p class="reason-desc">It instantly lights up my entire world and makes every difficult day feel completely effortless.</p>
+            </div>
+            <div class="glass-panel reason-card reveal">
+                <div class="reason-icon">🤍</div>
+                <h3 class="reason-title">Your Kindness</h3>
+                <p class="reason-desc">The soft, gentle way you care for everyone around you shows how truly genuine your soul is.</p>
+            </div>
+            <div class="glass-panel reason-card reveal">
+                <div class="reason-icon">💖</div>
+                <h3 class="reason-title">Your Beautiful Heart</h3>
+                <p class="reason-desc">Pure, compassionate, and full of grace. Being loved by your heart is my life's greatest gift.</p>
+            </div>
+            <div class="glass-panel reason-card reveal">
+                <div class="reason-icon">🎶</div>
+                <h3 class="reason-title">Your Laugh</h3>
+                <p class="reason-desc">My favorite sound in the universe. Hearing it is instant happiness for my soul.</p>
+            </div>
+            <div class="glass-panel reason-card reveal">
+                <div class="reason-icon">🌸</div>
+                <h3 class="reason-title">Your Personality</h3>
+                <p class="reason-desc">The perfect blend of warmth, intelligence, sweet humor, and absolute beauty.</p>
+            </div>
+            <div class="glass-panel reason-card reveal">
+                <div class="reason-icon">♾️</div>
+                <h3 class="reason-title">Everything About You</h3>
+                <p class="reason-desc">From your little quirks to your grandest dreams—I love every single detail that makes you Lisa.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 5: SECRET SURPRISE
+         ========================================================================== -->
+    <section id="surprise">
+        <h2 class="section-title reveal">A Little Secret</h2>
+        <p class="section-subtitle reveal">Tread carefully... or curiosity might win!</p>
+        <button class="btn-glow btn-secondary reveal" id="surpriseBtn">Don't Click</button>
+    </section>
+
+    <!-- Secret Surprise Overlay Modal -->
+    <div id="surprise-modal">
+        <button class="close-btn" id="closeSurprise">&times;</button>
+        <div class="surprise-content">
+            <div style="font-size: 4rem; margin-bottom: 20px;">💖</div>
+            <h2 class="surprise-text">"You are the most beautiful part of my life."</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; font-weight: 300;">- Alaa</p>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         SECTION 6: FINAL SCENE
+         ========================================================================== -->
+    <section id="final-scene">
+        <div class="big-heart-container reveal">
+            <div class="beating-heart">❤️</div>
+        </div>
+        <p class="final-quote reveal">"No matter where life takes us,<br>you'll always be my favorite place."</p>
+        <div class="final-sub reveal">Forever & Always</div>
+        <div class="final-names reveal">Alaa ❤️ Lisa</div>
+
+        <footer>
+            Crafted with infinite love for Lisa • Girlfriend Day 2026
+        </footer>
+    </section>
+
+    <!-- ==========================================================================
+         JAVASCRIPT ENGINE (All Logic & Canvas Renderers)
+         ========================================================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            /* ==========================================================================
+               1. PRELOADER CONTROLLER
+               ========================================================================== */
+            const loader = document.getElementById('loader');
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    loader.style.visibility = 'hidden';
+                }, 600);
+            });
+
+            /* ==========================================================================
+               2. NIGHT SKY CANVAS (Stars, Twinkling, Glowing Nebula)
+               ========================================================================== */
+            const skyCanvas = document.getElementById('sky-canvas');
+            const skyCtx = skyCanvas.getContext('2d');
+
+            let width = skyCanvas.width = window.innerWidth;
+            let height = skyCanvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = skyCanvas.width = window.innerWidth;
+                height = skyCanvas.height = window.innerHeight;
+                initStars();
+            });
+
+            class Star {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 1.8 + 0.2;
+                    this.alpha = Math.random();
+                    this.speed = Math.random() * 0.015 + 0.005;
+                    this.color = ['#ffffff', '#ffb703', '#ff85a1', '#c77dff'][Math.floor(Math.random() * 4)];
+                }
+
+                update() {
+                    this.alpha += this.speed;
+                    if (this.alpha > 1 || this.alpha < 0) {
+                        this.speed = -this.speed;
+                    }
+                }
+
+                draw() {
+                    skyCtx.save();
+                    skyCtx.globalAlpha = Math.abs(this.alpha);
+                    skyCtx.fillStyle = this.color;
+                    skyCtx.shadowBlur = this.size * 4;
+                    skyCtx.shadowColor = this.color;
+                    skyCtx.beginPath();
+                    skyCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    skyCtx.fill();
+                    skyCtx.restore();
+                }
+            }
+
+            let stars = [];
+            function initStars() {
+                stars = [];
+                const count = Math.floor((width * height) / 3000);
+                for (let i = 0; i < count; i++) {
+                    stars.push(new Star());
+                }
+            }
+            initStars();
+
+            function renderSky() {
+                skyCtx.clearRect(0, 0, width, height);
+
+                // Deep Space Ambient Glow Background
+                const grad = skyCtx.createRadialGradient(
+                    width / 2, height / 2, 0,
+                    width / 2, height / 2, Math.max(width, height) / 1.2
+                );
+                grad.addColorStop(0, '#0f081d');
+                grad.addColorStop(0.5, '#07050d');
+                grad.addColorStop(1, '#020105');
+
+                skyCtx.fillStyle = grad;
+                skyCtx.fillRect(0, 0, width, height);
+
+                stars.forEach(star => {
+                    star.update();
+                    star.draw();
+                });
+
+                requestAnimationFrame(renderSky);
+            }
+            renderSky();
+
+            /* ==========================================================================
+               3. CURSOR GLOW & MOUSE TRAIL
+               ========================================================================== */
+            const cursorGlow = document.getElementById('cursorGlow');
+            let mouseX = width / 2;
+            let mouseY = height / 2;
+            let currentX = width / 2;
+            let currentY = height / 2;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function animateCursor() {
+                currentX += (mouseX - currentX) * 0.1;
+                currentY += (mouseY - currentY) * 0.1;
+
+                if (cursorGlow) {
+                    cursorGlow.style.left = `${currentX}px`;
+                    cursorGlow.style.top = `${currentY}px`;
+                }
+
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            /* ==========================================================================
+               4. FLOATING AMBIENT HEARTS
+               ========================================================================== */
+            const ambientHeartsContainer = document.getElementById('ambientHearts');
+            const heartSymbols = ['❤️', '💖', '🌸', '✨', '💕'];
+
+            function spawnAmbientHeart() {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = `${Math.random() * 95}%`;
+                heart.style.animationDuration = `${Math.random() * 6 + 8}s`;
+                heart.style.fontSize = `${Math.random() * 1 + 0.8}rem`;
+
+                ambientHeartsContainer.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 14000);
+            }
+
+            setInterval(spawnAmbientHeart, 1200);
+
+            /* ==========================================================================
+               5. INTERACTIVE HEART BURST ENGINE (Canvas Particle Explosion)
+               ========================================================================== */
+            const burstCanvas = document.getElementById('burst-canvas');
+            const burstCtx = burstCanvas.getContext('2d');
+
+            burstCanvas.width = window.innerWidth;
+            burstCanvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                burstCanvas.width = window.innerWidth;
+                burstCanvas.height = window.innerHeight;
+            });
+
+            class Particle {
+                constructor(x, y, isConfetti = false) {
+                    this.x = x;
+                    this.y = y;
+                    this.isConfetti = isConfetti;
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = isConfetti ? Math.random() * 8 + 4 : Math.random() * 5 + 2;
+
+                    this.vx = Math.cos(angle) * speed;
+                    this.vy = Math.sin(angle) * speed - (isConfetti ? 3 : 1);
+                    this.gravity = isConfetti ? 0.15 : 0.05;
+                    this.alpha = 1;
+                    this.decay = Math.random() * 0.02 + 0.01;
+                    this.size = isConfetti ? Math.random() * 8 + 4 : Math.random() * 16 + 10;
+                    this.color = ['#ff4d6d', '#ff85a1', '#c77dff', '#e0aaff', '#ffb703', '#ffffff'][Math.floor(Math.random() * 6)];
+                    this.rotation = Math.random() * 360;
+                    this.rotationSpeed = (Math.random() - 0.5) * 10;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vy += this.gravity;
+                    this.alpha -= this.decay;
+                    this.rotation += this.rotationSpeed;
+                }
+
+                draw() {
+                    burstCtx.save();
+                    burstCtx.globalAlpha = Math.max(0, this.alpha);
+                    burstCtx.translate(this.x, this.y);
+                    burstCtx.rotate((this.rotation * Math.PI) / 180);
+
+                    if (this.isConfetti) {
+                        burstCtx.fillStyle = this.color;
+                        burstCtx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size / 2);
+                    } else {
+                        // Render Heart Symbol
+                        burstCtx.font = `${this.size}px serif`;
+                        burstCtx.fillStyle = this.color;
+                        burstCtx.textAlign = 'center';
+                        burstCtx.textBaseline = 'middle';
+                        burstCtx.fillText('❤️', 0, 0);
+                    }
+
+                    burstCtx.restore();
+                }
+            }
+
+            let burstParticles = [];
+
+            function createBurst(x, y, count = 15, isConfetti = false) {
+                for (let i = 0; i < count; i++) {
+                    burstParticles.push(new Particle(x, y, isConfetti));
+                }
+            }
+
+            function renderBurst() {
+                burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
+                for (let i = burstParticles.length - 1; i >= 0; i--) {
+                    const p = burstParticles[i];
+                    p.update();
+                    p.draw();
+                    if (p.alpha <= 0) {
+                        burstParticles.splice(i, 1);
+                    }
+                }
+                requestAnimationFrame(renderBurst);
+            }
+            renderBurst();
+
+            // Trigger burst on any click or touch
+            window.addEventListener('click', (e) => {
+                // Prevent burst if clicking interactive buttons (optional smooth feel)
+                createBurst(e.clientX, e.clientY, 12);
+            });
+
+            /* ==========================================================================
+               6. TYPEWRITER LOVE LETTER ENGINE
+               ========================================================================== */
+            const letterText = `My Dearest Lisa,
+
+From the moment you entered my life on May 8th, everything transformed into something infinitely more beautiful. 
+
+I am so deeply grateful for your presence. You bring a warmth and light to my world that I never knew was missing. Every moment shared with you becomes a cherished memory, and every laugh we share brightens even my darkest days.
+
+You make me happier than words could ever summarize, and my sweetest goal every day is simply to protect your smile. Thank you for being my love, my comfort, and my favorite person.
+
+I love you more than words can ever describe.`;
+
+            const typewriterContainer = document.getElementById('typewriter');
+            let hasTyped = false;
+
+            function typeWriter() {
+                let index = 0;
+                typewriterContainer.innerHTML = '';
+                const cursor = document.createElement('span');
+                cursor.className = 'cursor-line';
+
+                function typeNextChar() {
+                    if (index < letterText.length) {
+                        const char = letterText.charAt(index);
+                        if (char === '\n') {
+                            typewriterContainer.appendChild(document.createElement('br'));
+                        } else {
+                            const charNode = document.createTextNode(char);
+                            typewriterContainer.appendChild(charNode);
+                        }
+                        typewriterContainer.appendChild(cursor);
+                        index++;
+                        setTimeout(typeNextChar, char === '.' || char === ',' ? 150 : 35);
+                    } else {
+                        cursor.remove();
+                    }
+                }
+                typeNextChar();
+            }
+
+            /* ==========================================================================
+               7. LIVE RELATIONSHIP TIMER ENGINE
+               ========================================================================== */
+            // Target Start Date: May 8, 2026
+            const startDate = new Date('2026-05-08T00:00:00');
+
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+
+            function updateTimer() {
+                const now = new Date();
+                const diff = now - startDate;
+
+                if (diff < 0) {
+                    // Safety check if date is in the immediate future relative to client browser
+                    daysEl.innerText = "00";
+                    hoursEl.innerText = "00";
+                    minutesEl.innerText = "00";
+                    secondsEl.innerText = "00";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / 1000 / 60) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                daysEl.innerText = String(days).padStart(2, '0');
+                hoursEl.innerText = String(hours).padStart(2, '0');
+                minutesEl.innerText = String(minutes).padStart(2, '0');
+                secondsEl.innerText = String(seconds).padStart(2, '0');
+            }
+
+            setInterval(updateTimer, 1000);
+            updateTimer();
+
+            /* ==========================================================================
+               8. INTERSECTION OBSERVER (Scroll Animations & Typewriter Trigger)
+               ========================================================================== */
+            const observerOptions = {
+                threshold: 0.25
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+
+                        // Trigger typewriter when letter section appears
+                        if (entry.target.id === 'letter' && !hasTyped) {
+                            hasTyped = true;
+                            typeWriter();
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal, #letter').forEach(el => observer.observe(el));
+
+            /* ==========================================================================
+               9. SECRET SURPRISE MODAL & CONFETTI ENGINE
+               ========================================================================== */
+            const surpriseBtn = document.getElementById('surpriseBtn');
+            const surpriseModal = document.getElementById('surprise-modal');
+            const closeSurprise = document.getElementById('closeSurprise');
+
+            surpriseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                surpriseModal.classList.add('active');
+
+                // Burst continuous confetti and hearts
+                let duration = 3 * 1000;
+                let end = Date.now() + duration;
+
+                (function frame() {
+                    createBurst(
+                        Math.random() * window.innerWidth,
+                        Math.random() * window.innerHeight * 0.7,
+                        8,
+                        true
+                    );
+                    createBurst(
+                        Math.random() * window.innerWidth,
+                        Math.random() * window.innerHeight * 0.7,
+                        8,
+                        false
+                    );
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                })();
+            });
+
+            closeSurprise.addEventListener('click', () => {
+                surpriseModal.classList.remove('active');
+            });
+
+            /* ==========================================================================
+               10. AMBIENT AUDIO SYNTHESIZER (Pure Offline Web Audio API)
+               ========================================================================== */
+            // Generational Soft Harmonic Ambient Soundscape without external mp3 dependency
+            let audioCtx = null;
+            let isPlaying = false;
+            let masterGain = null;
+            let ambientOscillators = [];
+
+            function initAudio() {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+
+                masterGain = audioCtx.createGain();
+                masterGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                masterGain.connect(audioCtx.destination);
+
+                // Pentatonic Chord frequencies for romantic ambient pad (F# Minor / A Major Chill Vibrations)
+                const freqs = [146.83, 220.00, 277.18, 329.63, 440.00];
+
+                freqs.forEach(freq => {
+                    const osc = audioCtx.createOscillator();
+                    const oscGain = audioCtx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                    // LFO Modulation for gentle pulsing swell
+                    const lfo = audioCtx.createOscillator();
+                    lfo.frequency.setValueAtTime(0.1 + Math.random() * 0.1, audioCtx.currentTime);
+                    const lfoGain = audioCtx.createGain();
+                    lfoGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+
+                    lfo.connect(lfoGain);
+                    lfoGain.connect(oscGain.gain);
+
+                    oscGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+
+                    osc.connect(oscGain);
+                    oscGain.connect(masterGain);
+
+                    osc.start();
+                    lfo.start();
+
+                    ambientOscillators.push({ osc, lfo });
+                });
+            }
+
+            const audioToggle = document.getElementById('audioToggle');
+            const audioIconOff = document.getElementById('audioIconOff');
+            const audioIconOn = document.getElementById('audioIconOn');
+
+            audioToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!audioCtx) {
+                    initAudio();
+                    isPlaying = true;
+                    audioIconOff.style.display = 'none';
+                    audioIconOn.style.display = 'block';
+                } else if (isPlaying) {
+                    audioCtx.suspend();
+                    isPlaying = false;
+                    audioIconOff.style.display = 'block';
+                    audioIconOn.style.display = 'none';
+                } else {
+                    audioCtx.resume();
+                    isPlaying = true;
+                    audioIconOff.style.display = 'none';
+                    audioIconOn.style.display = 'block';
+                }
+            });
+
+            /* ==========================================================================
+               11. SMOOTH SCROLL FOR BUTTON
+               ========================================================================== */
+            document.getElementById('openHeartBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('letter').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
